@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#10251d">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <title>App My Spare Time</title>
+
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      margin: 0;
+      background: #f6f3eb;
+      color: #10251d;
+    }
+
+    main {
+      max-width: 760px;
+      margin: auto;
+      padding: 22px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 20px;
+      margin: 14px 0;
+      box-shadow: 0 2px 12px #0001;
+    }
+
+    select, button {
+      font: inherit;
+    }
+
+    select {
+      width: 100%;
+      padding: 13px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .primary {
+      width: 100%;
+      padding: 16px;
+      border: 0;
+      border-radius: 14px;
+      background: #10251d;
+      color: white;
+      font-weight: 800;
+      font-size: 1.05rem;
+    }
+
+    .note {
+      padding: 12px;
+      background: #f0eee7;
+      border-radius: 12px;
+    }
+  </style>
+</head>
+
+<body>
+
+<main>
+
+  <h1>🧭 App My Spare Time</h1>
+
+  <p>
+    Tell it what you've got time for.
+    Let the app choose the adventure.
+  </p>
+
+  <section class="card">
+
+    <h2>📍 Your location</h2>
+
+    <div class="note">
+      App My Spare Time can use your Samsung tablet's
+      location as the starting point.
+    </div>
+
+    <button id="locationButton"
+      style="margin-top:10px;width:100%;padding:13px;border:1px solid #ccc;border-radius:12px;background:white;font-weight:800">
+      📍 Use my current location
+    </button>
+
+    <p id="locationStatus">
+      Location not requested yet.
+    </p>
+
+  </section>
+
+  <section class="card">
+
+    <h2>⏱️ How long have you got?</h2>
+
+    <select id="duration">
+      <option>3 hours</option>
+      <option>Half day</option>
+      <option>Full day</option>
+      <option>Overnight</option>
+      <option>Weekend</option>
+      <option>3 days</option>
+    </select>
+
+  </section>
+
+  <section class="card">
+
+    <h2>🎲 Ready?</h2>
+
+    <div class="note">
+      Once your filters are complete, App My Spare Time
+      will choose the destination, activities, food,
+      stops and timings for you.
+    </div>
+
+    <button class="primary" id="go" style="margin-top:12px">
+      TAKE OVER & BUILD EVERYTHING
+    </button>
+
+    <p id="status"></p>
+
+  </section>
+
+</main>
+
+<script>
+
+const locationButton =
+  document.getElementById("locationButton");
+
+const locationStatus =
+  document.getElementById("locationStatus");
+
+locationButton.onclick = () => {
+
+  locationStatus.textContent =
+    "📍 Asking your tablet for permission...";
+
+  if (!navigator.geolocation) {
+
+    locationStatus.textContent =
+      "Location isn't available in this browser.";
+
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+
+    () => {
+
+      locationStatus.textContent =
+        "✓ Location found. Your starting point is ready.";
+
+    },
+
+    error => {
+
+      if (error.code === 1) {
+
+        locationStatus.textContent =
+          "Location permission was denied.";
+
+      } else {
+
+        locationStatus.textContent =
+          "Couldn't get your location. Make sure Location is switched on.";
+
+      }
+
+    },
+
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 60000
+    }
+
+  );
+
+};
+
+document.getElementById("go").onclick = async () => {
+
+  const status = document.getElementById("status");
+
+  status.textContent =
+    "🧭 Checking the Adventure Brain...";
+
+  try {
+
+    const response =
+      await fetch("/api/health");
+
+    const result =
+      await response.json();
+
+    status.textContent =
+      result.ok
+        ? "✓ App My Spare Time is connected."
+        : "Backend isn't ready yet.";
+
+  } catch {
+
+    status.textContent =
+      "The app is online, but the Adventure Brain isn't connected yet.";
+
+  }
+
+};
+
+</script>
+
+</body>
+</html>
