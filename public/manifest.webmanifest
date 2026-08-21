@@ -1,0 +1,10 @@
+{
+  "name": "App My Spare Time",
+  "short_name": "Spare Time",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f6f3eb",
+  "theme_color": "#10251d",
+  "description": "Let App My Spare Time choose your next adventure."
+}
