@@ -390,31 +390,38 @@ go.onclick = async () => {
       "✓ Adventure built.";
 
     result.innerHTML = `
+  <div class="result">
 
-      <div class="result">
+    <h2>${data.title}</h2>
 
-        <h2>${data.title}</h2>
+    <p><b>${data.area}</b></p>
 
-        <p><b>${data.area}</b></p>
+    <p>${data.summary}</p>
 
-        <p>${data.summary}</p>
+    <p>🕒 ${data.duration} · 🛑 ${data.stops} stops</p>
 
-        <p>
-          🕒 ${data.duration}
-          · 🛑 ${data.stops} stops
-        </p>
+    ${
+      data.activity
+        ? `<p>🎯 <b>Activity:</b> ${data.activity.name}</p>`
+        : ""
+    }
 
-        <a
-          href="${data.mapsUrl}"
-          target="_blank"
-          rel="noopener"
-        >
-          🗺️ Open adventure in Google Maps
-        </a>
+    ${
+      data.food
+        ? `<p>🍴 <b>Food stop:</b> ${data.food.name}</p>`
+        : ""
+    }
 
-      </div>
+    <a
+      href="${data.mapsUrl}"
+      target="_blank"
+      rel="noopener"
+    >
+      🗺️ Open adventure in Google Maps
+    </a>
 
-    `;
+  </div>
+`;
 
   }
 
