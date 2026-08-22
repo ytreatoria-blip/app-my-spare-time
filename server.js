@@ -253,25 +253,7 @@ app.post("/api/adventure/build", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(
-    `App My Spare Time Adventure Brain v22 running on port ${PORT}`
-  );
-});    `&destination=${encodeURIComponent(adventure.area)}` +
-    `&travelmode=${travelMode}`;
 
-  res.json({
-    title: adventure.title,
-    area: adventure.area,
-    summary: adventure.summary,
-    duration:
-      preferences.duration === "3h"
-        ? "about 3 hours"
-        : "your selected time",
-    stops: 2,
-    mapsUrl
-  });
-});
 
 app.listen(PORT, () => {
   console.log(
