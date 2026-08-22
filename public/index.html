@@ -400,17 +400,13 @@ go.onclick = async () => {
 
     <p>🕒 ${data.duration} · 🛑 ${data.stops} stops</p>
 
-    ${
-      data.activity
-        ? `<p>🎯 <b>Activity:</b> ${data.activity.name}</p>`
-        : ""
-    }
+    <p>🎯 <b>Activity:</b> ${
+      data.activity ? data.activity.name : "Not selected"
+    }</p>
 
-    ${
-      data.food
-        ? `<p>🍴 <b>Food stop:</b> ${data.food.name}</p>`
-        : ""
-    }
+    <p>🍴 <b>Food stop:</b> ${
+      data.food ? data.food.name : "Not selected"
+    }</p>
 
     <a
       href="${data.mapsUrl}"
