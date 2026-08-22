@@ -14,38 +14,58 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-async function findPlaces(latitude, longitude, radius, query) {
-  const response = await fetch(
-    "https://overpass-api.de/api/interpreter",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "User-Agent": "AppMySpareTime/22"
-      },
-      body: new URLSearchParams({ data: query })
-    }
-  );
 
-  if (!response.ok) {
-    throw new Error("Place search is temporarily unavailable.");
+  async function findPlaces(latitude, longitude, radius, query) {
+  const endpoints = [
+    "https://overpass-api.de/api/interpreter",
+    "https://overpass.kumi.systems/api/interpreter"
+  ];
+
+  for (const endpoint of endpoints) {
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 30000);
+
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "User-Agent": "AppMySpareTime/23"
+        },
+        body: new URLSearchParams({
+          data: query
+        }),
+        signal: controller.signal
+      });
+
+      clearTimeout(timeout);
+
+      if (!response.ok) {
+        continue;
+      }
+
+      const data = await response.json();
+
+      return (data.elements || [])
+        .map(place => ({
+          name: place.tags?.name,
+          lat: place.lat ?? place.center?.lat,
+          lon: place.lon ?? place.center?.lon,
+          tags: place.tags || {}
+        }))
+        .filter(place =>
+          place.name &&
+          typeof place.lat === "number" &&
+          typeof place.lon === "number"
+        );
+
+    } catch (error) {
+      console.log(`Place search failed at ${endpoint}`);
+    }
   }
 
-  const data = await response.json();
-
-  return (data.elements || [])
-    .map(place => ({
-      name: place.tags?.name,
-      lat: place.lat ?? place.center?.lat,
-      lon: place.lon ?? place.center?.lon,
-      tags: place.tags || {}
-    }))
-    .filter(place =>
-      place.name &&
-      typeof place.lat === "number" &&
-      typeof place.lon === "number"
-    );
-}
+  throw new Error("Place search is temporarily unavailable.");
+  }
 
 function distanceMiles(lat1, lon1, lat2, lon2) {
   const R = 3958.8;
