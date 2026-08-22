@@ -18,7 +18,7 @@ app.get("/api/health", (req, res) => {
   async function findPlaces(latitude, longitude, radius, query) {
   const endpoints = [
     "https://overpass-api.de/api/interpreter",
-    "https://overpass.kumi.systems/api/interpreter"
+    "https://overpass.private.coffee/api/interpreter"
   ];
 
   for (const endpoint of endpoints) {
