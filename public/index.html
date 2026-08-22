@@ -1,147 +1,286 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#10251d">
-  <meta name="mobile-web-app-capable" content="yes">
-  <link rel="manifest" href="/manifest.webmanifest">
-  <title>App My Spare Time</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10251d">
+<link rel="manifest" href="/manifest.webmanifest">
+<title>App My Spare Time</title>
 
-  <style>
-    body {
-      font-family: system-ui, sans-serif;
-      margin: 0;
-      background: #f6f3eb;
-      color: #10251d;
-    }
-
-    main {
-      max-width: 760px;
-      margin: auto;
-      padding: 22px;
-    }
-
-    .card {
-      background: white;
-      border-radius: 18px;
-      padding: 20px;
-      margin: 14px 0;
-      box-shadow: 0 2px 12px #0001;
-    }
-
-    select, button {
-      font: inherit;
-    }
-
-    select {
-      width: 100%;
-      padding: 13px;
-      border-radius: 12px;
-      border: 1px solid #ccc;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    .primary {
-      width: 100%;
-      padding: 16px;
-      border: 0;
-      border-radius: 14px;
-      background: #10251d;
-      color: white;
-      font-weight: 800;
-      font-size: 1.05rem;
-    }
-
-    .note {
-      padding: 12px;
-      background: #f0eee7;
-      border-radius: 12px;
-    }
-  </style>
+<style>
+body{
+  font-family:system-ui,sans-serif;
+  margin:0;
+  background:#f6f3eb;
+  color:#10251d
+}
+main{
+  max-width:760px;
+  margin:auto;
+  padding:22px
+}
+.card{
+  background:#fff;
+  border-radius:18px;
+  padding:20px;
+  margin:14px 0;
+  box-shadow:0 2px 12px #0001
+}
+label{
+  display:block;
+  font-weight:700;
+  margin-top:14px;
+  margin-bottom:6px
+}
+select,input{
+  width:100%;
+  box-sizing:border-box;
+  padding:12px;
+  border:1px solid #ccc;
+  border-radius:12px;
+  font:inherit;
+  background:#fff
+}
+.primary{
+  width:100%;
+  padding:17px;
+  border:0;
+  border-radius:14px;
+  background:#10251d;
+  color:#fff;
+  font-weight:800;
+  font-size:1.05rem
+}
+.note{
+  padding:12px;
+  background:#f0eee7;
+  border-radius:12px
+}
+#result{
+  margin-top:15px
+}
+.result{
+  border:1px solid #ddd;
+  border-radius:14px;
+  padding:15px
+}
+</style>
 </head>
 
 <body>
 
 <main>
 
-  <h1>🧭 App My Spare Time</h1>
+<h1>🧭 App My Spare Time</h1>
 
-  <p>
-    Tell it what you've got time for.
-    Let the app choose the adventure.
-  </p>
+<p>
+Answer the questions. Then let the app take over.
+</p>
 
-  <section class="card">
+<section class="card">
 
-    <h2>📍 Your location</h2>
+<h2>📍 Starting point</h2>
 
-    <div class="note">
-      App My Spare Time can use your Samsung tablet's
-      location as the starting point.
-    </div>
+<button id="locationButton">
+📍 Use my current location
+</button>
 
-    <button id="locationButton"
-      style="margin-top:10px;width:100%;padding:13px;border:1px solid #ccc;border-radius:12px;background:white;font-weight:800">
-      📍 Use my current location
-    </button>
+<p id="locationStatus">
+Location not requested yet.
+</p>
 
-    <p id="locationStatus">
-      Location not requested yet.
-    </p>
+</section>
 
-  </section>
+<section class="card">
 
-  <section class="card">
+<h2>⏱️ Time & distance</h2>
 
-    <h2>⏱️ How long have you got?</h2>
+<label>How long have you got?</label>
 
-    <select id="duration">
-      <option>3 hours</option>
-      <option>Half day</option>
-      <option>Full day</option>
-      <option>Overnight</option>
-      <option>Weekend</option>
-      <option>3 days</option>
-    </select>
+<select id="duration">
+<option value="3h">3 hours</option>
+<option value="half">Half day</option>
+<option value="day">Full day</option>
+<option value="overnight">Overnight</option>
+<option value="weekend">Weekend</option>
+<option value="3day">3 days</option>
+</select>
 
-  </section>
+<label>Maximum distance</label>
 
-  <section class="card">
+<select id="distance">
+<option value="10">10 miles</option>
+<option value="20" selected>20 miles</option>
+<option value="30">30 miles</option>
+<option value="50">50 miles</option>
+<option value="100">100 miles</option>
+<option value="any">Anywhere in the UK</option>
+</select>
 
-    <h2>🎲 Ready?</h2>
+</section>
 
-    <div class="note">
-      Once your filters are complete, App My Spare Time
-      will choose the destination, activities, food,
-      stops and timings for you.
-    </div>
+<section class="card">
 
-    <button class="primary" id="go" style="margin-top:12px">
-      TAKE OVER & BUILD EVERYTHING
-    </button>
+<h2>🚗 How are you travelling?</h2>
 
-    <p id="status"></p>
+<select id="transport">
+<option>Car</option>
+<option>Motorbike</option>
+<option>Bicycle</option>
+<option>Walking</option>
+<option>Public transport</option>
+</select>
 
-  </section>
+</section>
+
+<section class="card">
+
+<h2>🎯 What sounds good?</h2>
+
+<label>Main interest</label>
+
+<select id="interest1">
+<option>Walking</option>
+<option>Nature</option>
+<option>History</option>
+<option>Castles</option>
+<option>Coast</option>
+<option>Photography</option>
+<option>Food</option>
+<option>Adventure</option>
+<option>Wildlife</option>
+<option>Something unusual</option>
+</select>
+
+<label>Something extra</label>
+
+<select id="interest2">
+<option>Scenic views</option>
+<option>Gardens</option>
+<option>Museums</option>
+<option>Markets</option>
+<option>Wildlife</option>
+<option>History</option>
+<option>Photography</option>
+<option>Something unusual</option>
+<option>Surprise me</option>
+</select>
+
+</section>
+
+<section class="card">
+
+<h2>🍴 Food</h2>
+
+<label>What sort of food stop?</label>
+
+<select id="food">
+<option>Anything</option>
+<option>Pub / traditional</option>
+<option>Cafe</option>
+<option>Restaurant</option>
+<option>Fine dining</option>
+<option>Vegetarian friendly</option>
+<option>Vegan friendly</option>
+<option>Family friendly</option>
+</select>
+
+<label>When should food happen?</label>
+
+<select id="meal">
+<option>Whenever makes sense</option>
+<option>Lunch</option>
+<option>Dinner</option>
+<option>Breakfast</option>
+</select>
+
+</section>
+
+<section class="card">
+
+<h2>🛑 Stops</h2>
+
+<label>How many stops?</label>
+
+<select id="stops">
+<option value="1">1</option>
+<option value="2" selected>2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5+</option>
+<option value="auto">Let the app decide</option>
+</select>
+
+<label>Time at each stop</label>
+
+<select id="stopTime">
+<option value="auto">Let the app decide</option>
+<option>30 minutes</option>
+<option>1 hour</option>
+<option>90 minutes</option>
+<option>2 hours</option>
+<option>3 hours</option>
+</select>
+
+</section>
+
+<section class="card">
+
+<h2>🏨 Overnight</h2>
+
+<label>Where should I stay?</label>
+
+<select id="stay">
+<option>Only if needed</option>
+<option>Hotel</option>
+<option>Pub with rooms</option>
+<option>Cabin / lodge</option>
+<option>Outdoor accommodation</option>
+<option>Something unusual</option>
+</select>
+
+</section>
+
+<section class="card">
+
+<h2>🎲 Mystery Mode</h2>
+
+<div class="note">
+The app chooses the destination and stops.
+Mystery Mode hides the plan until you're on the adventure.
+</div>
+
+<label>Mystery level</label>
+
+<select id="mystery">
+<option value="no">Show me everything</option>
+<option value="yes">Mystery: reveal as I go</option>
+</select>
+
+</section>
+
+<section class="card">
+
+<button class="primary" id="go">
+TAKE OVER & BUILD EVERYTHING
+</button>
+
+<p id="status"></p>
+
+<div id="result"></div>
+
+</section>
 
 </main>
 
 <script>
 
-const locationButton =
-  document.getElementById("locationButton");
-
-const locationStatus =
-  document.getElementById("locationStatus");
+let currentLocation = null;
 
 locationButton.onclick = () => {
 
   locationStatus.textContent =
-    "📍 Asking your tablet for permission...";
+    "📍 Asking your tablet for permission…";
 
   if (!navigator.geolocation) {
 
@@ -153,7 +292,12 @@ locationButton.onclick = () => {
 
   navigator.geolocation.getCurrentPosition(
 
-    () => {
+    position => {
+
+      currentLocation = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+      };
 
       locationStatus.textContent =
         "✓ Location found. Your starting point is ready.";
@@ -162,54 +306,128 @@ locationButton.onclick = () => {
 
     error => {
 
-      if (error.code === 1) {
-
-        locationStatus.textContent =
-          "Location permission was denied.";
-
-      } else {
-
-        locationStatus.textContent =
-          "Couldn't get your location. Make sure Location is switched on.";
-
-      }
+      locationStatus.textContent =
+        error.code === 1
+          ? "Location permission was denied."
+          : "Couldn't get your location.";
 
     },
 
     {
-      enableHighAccuracy: true,
-      timeout: 15000,
-      maximumAge: 60000
+      enableHighAccuracy:true,
+      timeout:15000,
+      maximumAge:60000
     }
 
   );
 
 };
 
-document.getElementById("go").onclick = async () => {
 
-  const status = document.getElementById("status");
+go.onclick = async () => {
 
   status.textContent =
-    "🧭 Checking the Adventure Brain...";
+    "🧠 Choosing your adventure…";
+
+  result.innerHTML = "";
 
   try {
 
-    const response =
-      await fetch("/api/health");
+    const response = await fetch(
+      "/api/adventure/build",
+      {
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
 
-    const result =
-      await response.json();
+          origin:currentLocation,
+
+          preferences:{
+
+            duration:duration.value,
+
+            distance:distance.value,
+
+            transport:transport.value,
+
+            interests:[
+              interest1.value,
+              interest2.value
+            ],
+
+            food:food.value,
+
+            meal:meal.value,
+
+            stops:stops.value,
+
+            stopTime:stopTime.value,
+
+            accommodation:stay.value,
+
+            mystery:mystery.value === "yes"
+
+          }
+
+        })
+
+      }
+    );
+
+    const data = await response.json();
+
+    if(!response.ok){
+
+      throw new Error(
+        data.error || "Adventure couldn't be built."
+      );
+
+    }
 
     status.textContent =
-      result.ok
-        ? "✓ App My Spare Time is connected."
-        : "Backend isn't ready yet.";
+      "✓ Adventure built.";
 
-  } catch {
+    result.innerHTML = `
+
+      <div class="result">
+
+        <h2>${data.title}</h2>
+
+        <p><b>${data.area}</b></p>
+
+        <p>${data.summary}</p>
+
+        <p>
+          🕒 ${data.duration}
+          · 🛑 ${data.stops} stops
+        </p>
+
+        <a
+          href="${data.mapsUrl}"
+          target="_blank"
+          rel="noopener"
+        >
+          🗺️ Open adventure in Google Maps
+        </a>
+
+      </div>
+
+    `;
+
+  }
+
+  catch(error){
 
     status.textContent =
-      "The app is online, but the Adventure Brain isn't connected yet.";
+      "The Adventure Brain couldn't build this adventure yet.";
+
+    result.innerHTML = `
+      <div class="note">
+        ${error.message}
+      </div>
+    `;
 
   }
 
