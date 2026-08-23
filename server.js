@@ -62,7 +62,7 @@ app.get("/api/health", (req, res) => {
         );
 
     } catch (error) {
-      console.log(`Place search failed at ${endpoint}:`, error);
+      throw new Error(`Place search failed at ${endpoint}: ${error.message}`);
     }
   }
 
