@@ -271,10 +271,7 @@ res.status(500).json({
   error: `Adventure Brain error: ${error.message}`
 });;
 
-    res.status(500).json({
-      error:
-        "The Adventure Brain couldn't search for places right now. Please try again."
-    });
+    
   }
 });
 
