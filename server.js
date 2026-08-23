@@ -41,8 +41,9 @@ app.get("/api/health", (req, res) => {
       clearTimeout(timeout);
 
       if (!response.ok) {
-        continue;
-      }
+  console.log(`Place search HTTP ${response.status} at ${endpoint}`);
+  continue;
+}
 
       const data = await response.json();
 
