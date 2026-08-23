@@ -267,6 +267,9 @@ app.post("/api/adventure/build", async (req, res) => {
 
   } catch (error) {
     console.error(error);
+res.status(500).json({
+  error: `Adventure Brain error: ${error.message}`
+});;
 
     res.status(500).json({
       error:
