@@ -62,8 +62,7 @@ app.get("/api/health", (req, res) => {
         );
 
     } catch (error) {
-      throw new Error(`Place search failed at ${endpoint}: ${error.message}`);
-    }
+      console.error(`Place search failed at ${endpoint}:`, error.message);
   }
 
   throw new Error("Place search is temporarily unavailable.");
