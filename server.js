@@ -108,19 +108,19 @@ app.post("/api/adventure/build", async (req, res) => {
       120000;
 
     const activityQuery = `
-      [out:json][timeout:25];
-      (
-        nwr(around:${radius},${origin.latitude},${origin.longitude})
-          ["tourism"~"attraction|museum|gallery|viewpoint|zoo|theme_park|heritage"];
-        nwr(around:${radius},${origin.latitude},${origin.longitude})
-          ["historic"];
-        nwr(around:${radius},${origin.latitude},${origin.longitude})
-          ["leisure"~"park|nature_reserve|garden"];
-        nwr(around:${radius},${origin.latitude},${origin.longitude})
-          ["natural"~"beach|peak|waterfall|wood"];
-      );
-      out center tags;
-    `;
+[out:json][timeout:15];
+(
+  nwr(around:${radius},${origin.latitude},${origin.longitude})
+    ["tourism"~"attraction|museum|gallery|viewpoint|zoo|theme_park|heritage"];
+  nwr(around:${radius},${origin.latitude},${origin.longitude})
+    ["historic"];
+  nwr(around:${radius},${origin.latitude},${origin.longitude})
+    ["leisure"~"park|nature_reserve|garden"];
+  nwr(around:${radius},${origin.latitude},${origin.longitude})
+    ["natural"~"beach|waterfall"];
+);
+out center tags;
+`;
 
     const foodQuery = `
       [out:json][timeout:25];
