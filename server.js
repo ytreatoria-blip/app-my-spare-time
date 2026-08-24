@@ -86,6 +86,7 @@ function distanceMiles(lat1, lon1, lat2, lon2) {
 
 app.post("/api/adventure/build", async (req, res) => {
   try {
+    console.log("ADVENTURE BUILD REQUEST RECEIVED");
     const origin = req.body.origin;
     const preferences = req.body.preferences || {};
 
