@@ -67,8 +67,9 @@ app.get("/api/health", (req, res) => {
   }
 
   }
-  throw new Error("Place search is temporarily unavailable.");
-  
+  throw new Error(
+  `Place search failed at ${endpoint}: ${error.message}`
+);  
   }
 function distanceMiles(lat1, lon1, lat2, lon2) {
   const R = 3958.8;
