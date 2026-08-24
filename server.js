@@ -32,7 +32,7 @@ app.get("/api/health", (req, res) => {
           "Content-Type": "application/x-www-form-urlencoded",
           "User-Agent": "AppMySpareTime/23",
           "Accept": "application/json"
-        }
+        },
         body: new URLSearchParams({
           data: query
         }),
