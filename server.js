@@ -129,7 +129,7 @@ app.post("/api/adventure/build", async (req, res) => {
       );
       out center tags;
     `;
-
+console.log("ADVENTURE BUILD REACHED PLACE SEARCH");
     const [activities, foods] = await Promise.all([
       findPlaces(
         origin.latitude,
