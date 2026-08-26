@@ -6,6 +6,9 @@
   "scripts": {
     "start": "node server.js"
   },
+  "engines": {
+  "node": "18.x"
+},
   "dependencies": {
     "express": "^4.21.2"
   }
