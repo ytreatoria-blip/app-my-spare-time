@@ -393,9 +393,160 @@ out center tags;
       // CHOOSE ACTIVITY
       // --------------------------------------------------
 
-      const activity =
-        suitableActivities[0];
+      const interests = Array.isArray(preferences.interests)
+  ? preferences.interests.map(value =>
+      String(value).toLowerCase()
+    )
+  : [];
 
+const interestKeywords = {
+  walking: [
+    "park",
+    "nature_reserve",
+    "garden",
+    "viewpoint",
+    "beach",
+    "waterfall"
+  ],
+
+  nature: [
+    "nature",
+    "nature_reserve",
+    "garden",
+    "park",
+    "beach",
+    "waterfall"
+  ],
+
+  history: [
+    "historic",
+    "heritage",
+    "museum",
+    "memorial",
+    "castle",
+    "hall"
+  ],
+
+  castles: [
+    "castle",
+    "fort",
+    "ruins"
+  ],
+
+  coast: [
+    "beach",
+    "coast",
+    "seaside",
+    "cliff",
+    "waterfront"
+  ],
+
+  photography: [
+    "viewpoint",
+    "gallery",
+    "attraction",
+    "garden",
+    "beach",
+    "waterfall"
+  ],
+
+  food: [
+    "market"
+  ],
+
+  adventure: [
+    "theme_park",
+    "waterfall",
+    "beach",
+    "attraction"
+  ],
+
+  wildlife: [
+    "zoo",
+    "nature_reserve",
+    "wildlife",
+    "nature"
+  ],
+
+  "something unusual": [
+    "attraction",
+    "heritage",
+    "waterfall",
+    "theme_park",
+    "historic"
+  ],
+
+  "scenic views": [
+    "viewpoint",
+    "waterfall",
+    "beach",
+    "scenic",
+    "view"
+  ],
+
+  gardens: [
+    "garden"
+  ],
+
+  museums: [
+    "museum"
+  ],
+
+  markets: [
+    "market"
+  ],
+
+  "surprise me": []
+};
+
+const activity = suitableActivities
+  .map(place => {
+    const name =
+      String(place.name || "").toLowerCase();
+
+    const tagText =
+      Object.values(place.tags || {})
+        .join(" ")
+        .toLowerCase();
+
+    const searchable =
+      `${name} ${tagText}`;
+
+    let score = 0;
+
+    interests.forEach((interest, index) => {
+      const keywords =
+        interestKeywords[interest] || [];
+
+      const weight =
+        index === 0 ? 6 : 3;
+
+      if (
+        keywords.some(keyword =>
+          searchable.includes(keyword)
+        )
+      ) {
+        score += weight;
+      }
+
+      if (
+        interest !== "surprise me" &&
+        name.includes(interest)
+      ) {
+        score += 2;
+      }
+    });
+
+    return {
+      ...place,
+      score
+    };
+  })
+  .sort(
+    (a, b) =>
+      b.score - a.score ||
+      a.distance - b.distance
+  )[0];
 
       // --------------------------------------------------
       // CHOOSE FOOD
