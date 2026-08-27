@@ -278,47 +278,39 @@ TAKE OVER & BUILD EVERYTHING
 let currentLocation = null;
 
 locationButton.onclick = () => {
-
-  locationStatus.textContent =
-    "📍 Asking your tablet for permission…";
-
-  if (!navigator.geolocation) {
-
     locationStatus.textContent =
-      "Location isn't available in this browser.";
+        "📍 Asking your tablet for permission…";
 
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(
-
-    position => {
-
-      currentLocation = {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude
-      };
-
-      locationStatus.textContent =
-    `✓ Location: ${currentLocation.latitude}, ${currentLocation.longitude}`;
-
-    error => {
-
-      locationStatus.textContent =
-        error.code === 1
-          ? "Location permission was denied."
-          : "Couldn't get your location.";
-
-    },
-
-    {
-      enableHighAccuracy:true,
-      timeout:15000,
-      maximumAge:60000
+    if (!navigator.geolocation) {
+        locationStatus.textContent =
+            "Location isn't available in this browser.";
+        return;
     }
 
-  );
+    navigator.geolocation.getCurrentPosition(
+        position => {
+            currentLocation = {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude
+            };
 
+            locationStatus.textContent =
+                `✓ Location: ${currentLocation.latitude}, ${currentLocation.longitude}`;
+        },
+
+        error => {
+            locationStatus.textContent =
+                error.code === 1
+                    ? "Location permission was denied."
+                    : "Couldn't get your location.";
+        },
+
+        {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 60000
+        }
+    );
 };
 
 
