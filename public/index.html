@@ -300,9 +300,7 @@ locationButton.onclick = () => {
       };
 
       locationStatus.textContent =
-        "✓ Location found. Your starting point is ready.";
-
-    },
+    `✓ Location: ${currentLocation.latitude}, ${currentLocation.longitude}`;
 
     error => {
 
