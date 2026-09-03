@@ -134,7 +134,41 @@ async function findPlaces(query) {
     `Place search failed. ${failures.join(" | ")}`
   );
 }
+// =========================================
+// UK-WIDE SEARCH
+// =========================================
 
+async function findPlacesUK(query) {
+  const ukRegions = [
+    { lat: 51.5074, lon: -0.1278 },  // London
+    { lat: 52.4862, lon: -1.8904 },  // Birmingham
+    { lat: 53.4808, lon: -2.2426 },  // Manchester
+    { lat: 53.8008, lon: -1.5491 },  // Leeds
+    { lat: 55.9533, lon: -3.1883 },  // Edinburgh
+    { lat: 55.8642, lon: -4.2518 },  // Glasgow
+    { lat: 54.9783, lon: -1.6178 },  // Newcastle
+    { lat: 53.4084, lon: -2.9916 },  // Liverpool
+    { lat: 51.4816, lon: -3.1791 },  // Cardiff
+    { lat: 51.4545, lon: -2.5879 },  // Bristol
+    { lat: 52.6309, lon: 1.2974 },   // Norwich
+    { lat: 50.3755, lon: -4.1427 }   // Plymouth
+  ];
+
+  const searches = ukRegions.map(region => {
+    const regionalQuery = query.replace(
+      /around:\d+(?:\.\d+)?,[-\d.]+,[-\d.]+/g,
+      `around:50000,${region.lat},${region.lon}`
+    );
+
+    return findPlaces(regionalQuery);
+  });
+
+  const results = await Promise.allSettled(searches);
+
+  return results
+    .filter(result => result.status === "fulfilled")
+    .flatMap(result => result.value);
+}
 
 // ======================================================
 // GOOGLE MAPS URL
