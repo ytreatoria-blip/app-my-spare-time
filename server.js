@@ -349,13 +349,17 @@ out center tags;
       // --------------------------------------------------
 
       const [
-        activities,
-        foods
-      ] = await Promise.all([
-        findPlaces(activityQuery),
-        findPlaces(foodQuery)
-      ]);
+  activities,
+  foods
+] = await Promise.all([
+  isAnywhereUK
+    ? findPlacesUK(activityQuery)
+    : findPlaces(activityQuery),
 
+  isAnywhereUK
+    ? findPlacesUK(foodQuery)
+    : findPlaces(foodQuery)
+]);
 
       // --------------------------------------------------
       // DISTANCE FILTERING
