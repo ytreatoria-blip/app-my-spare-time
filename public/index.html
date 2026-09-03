@@ -277,6 +277,29 @@ TAKE OVER & BUILD EVERYTHING
 
 let currentLocation = null;
 
+// Explicitly select elements so geolocation and buttons don't rely on implicit globals
+const locationButton = document.getElementById('locationButton');
+const locationStatus = document.getElementById('locationStatus');
+const goButton = document.getElementById('go');
+const statusEl = document.getElementById('status');
+const resultEl = document.getElementById('result');
+
+// Form controls
+const duration = document.getElementById('duration');
+const distance = document.getElementById('distance');
+const transport = document.getElementById('transport');
+const interest1 = document.getElementById('interest1');
+const interest2 = document.getElementById('interest2');
+const food = document.getElementById('food');
+const meal = document.getElementById('meal');
+const stops = document.getElementById('stops');
+const stopTime = document.getElementById('stopTime');
+const stay = document.getElementById('stay');
+const mystery = document.getElementById('mystery');
+
+// Disable the build button until we have a location
+goButton.disabled = true;
+
 locationButton.onclick = () => {
     locationStatus.textContent =
         "📍 Asking your tablet for permission…";
@@ -296,6 +319,9 @@ locationButton.onclick = () => {
 
             locationStatus.textContent =
                 `✓ Location: ${currentLocation.latitude}, ${currentLocation.longitude}`;
+
+            // Enable the build button now we have a location
+            goButton.disabled = false;
         },
 
         error => {
@@ -303,6 +329,9 @@ locationButton.onclick = () => {
                 error.code === 1
                     ? "Location permission was denied."
                     : "Couldn't get your location.";
+
+            // Keep the build button disabled if we don't have a location
+            goButton.disabled = true;
         },
 
         {
@@ -314,22 +343,18 @@ locationButton.onclick = () => {
 };
 
 
-go.onclick = async () => {
+goButton.onclick = async () => {
 
   // Make the button clearly show work in progress
-  const goButton = document.getElementById('go');
-  const statusEl = document.getElementById('status');
-  const resultEl = document.getElementById('result');
-
   const originalGoText = goButton.textContent;
   goButton.disabled = true;
   goButton.textContent = '⏳ Searching…';
   statusEl.setAttribute('aria-busy', 'true');
 
-  status.textContent =
+  statusEl.textContent =
     "🧠 Choosing your adventure…";
   
-  result.innerHTML = "";
+  resultEl.innerHTML = "";
 
   try {
 
@@ -386,10 +411,10 @@ go.onclick = async () => {
 
     }
 
-    status.textContent =
+    statusEl.textContent =
       "✓ Adventure built.";
 
-    result.innerHTML = `
+    resultEl.innerHTML = `
   <div class="result">
 
     <h2>${data.title}</h2>
@@ -423,10 +448,10 @@ go.onclick = async () => {
 
   catch(error){
 
-    status.textContent =
+    statusEl.textContent =
       "The Adventure Brain couldn't build this adventure yet.";
 
-    result.innerHTML = `
+    resultEl.innerHTML = `
       <div class="note">
         ${error.message}
       </div>
@@ -439,6 +464,11 @@ go.onclick = async () => {
     goButton.disabled = false;
     goButton.textContent = originalGoText;
     statusEl.removeAttribute('aria-busy');
+
+    // If we lost the location (e.g. permission revoked), keep button disabled
+    if (!currentLocation) {
+      goButton.disabled = true;
+    }
   }
 
 };
