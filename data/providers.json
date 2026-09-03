@@ -1,0 +1,37 @@
+[
+  {
+    "id": "opentable",
+    "name": "OpenTable",
+    "types": ["restaurant"],
+    "template": "https://www.opentable.com/s?term={query}&rid={affiliate}",
+    "affiliateEnv": "OPENTABLE_AFFILIATE"
+  },
+  {
+    "id": "tripadvisor",
+    "name": "Tripadvisor",
+    "types": ["activity", "restaurant"],
+    "template": "https://www.tripadvisor.com/Search?q={query}&aid={affiliate}",
+    "affiliateEnv": "TRIPADVISOR_AFFILIATE"
+  },
+  {
+    "id": "google",
+    "name": "Google Search",
+    "types": ["activity", "restaurant", "accommodation"],
+    "template": "https://www.google.com/search?q={query}",
+    "affiliateEnv": ""
+  },
+  {
+    "id": "booking",
+    "name": "Booking.com",
+    "types": ["accommodation"],
+    "template": "https://www.booking.com/searchresults.html?ss={query}&aid={affiliate}",
+    "affiliateEnv": "BOOKING_AID"
+  },
+  {
+    "id": "viator",
+    "name": "Viator",
+    "types": ["activity"],
+    "template": "https://www.viator.com/searchResults/all?text={query}&affiliate={affiliate}",
+    "affiliateEnv": "VIATOR_AFFILIATE"
+  }
+]
