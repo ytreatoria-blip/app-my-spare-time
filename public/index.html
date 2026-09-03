@@ -316,6 +316,16 @@ locationButton.onclick = () => {
 
 go.onclick = async () => {
 
+  // Make the button clearly show work in progress
+  const goButton = document.getElementById('go');
+  const statusEl = document.getElementById('status');
+  const resultEl = document.getElementById('result');
+
+  const originalGoText = goButton.textContent;
+  goButton.disabled = true;
+  goButton.textContent = '⏳ Searching…';
+  statusEl.setAttribute('aria-busy', 'true');
+
   status.textContent =
     "🧠 Choosing your adventure…";
   
@@ -422,6 +432,13 @@ go.onclick = async () => {
       </div>
     `;
 
+  }
+
+  finally {
+    // Restore the button so the user can try again
+    goButton.disabled = false;
+    goButton.textContent = originalGoText;
+    statusEl.removeAttribute('aria-busy');
   }
 
 };
