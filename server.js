@@ -79,6 +79,81 @@ app.post('/api/outbound-click', async (req, res) => {
   }
 });
 
+// New endpoint: expand provider template (server-side) and log the click
+app.post('/api/expand-and-log', async (req, res) => {
+  try {
+    const { providerId, place, type } = req.body || {};
+
+    if (!providerId || !place) {
+      return res.status(400).json({ error: 'providerId and place are required' });
+    }
+
+    const providersPath = path.join(process.cwd(), 'data', 'providers.json');
+    let providers = [];
+
+    try {
+      const pText = await fs.readFile(providersPath, 'utf8');
+      providers = JSON.parse(pText || '[]');
+    } catch (err) {
+      console.error('Could not read providers.json', err);
+      providers = [];
+    }
+
+    const provider = providers.find(p => p.id === providerId);
+
+    if (!provider) {
+      return res.status(404).json({ error: 'Provider not found' });
+    }
+
+    // Expand template
+    const affiliateValue = provider.affiliateEnv ? (process.env[provider.affiliateEnv] || '') : '';
+
+    const replacements = {
+      query: encodeURIComponent(`${place.name || ''}`),
+      name: encodeURIComponent(`${place.name || ''}`),
+      lat: place.lat != null ? String(place.lat) : '',
+      lon: place.lon != null ? String(place.lon) : '',
+      affiliate: encodeURIComponent(affiliateValue)
+    };
+
+    const expandedUrl = provider.template.replace(/\{(query|name|lat|lon|affiliate)\}/g, (m, key) => replacements[key] ?? '');
+
+    // Log the click
+    const record = {
+      id: typeof randomUUID === 'function' ? randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2,8)}`,
+      providerId: provider.id,
+      providerName: provider.name,
+      place: place,
+      type: type || null,
+      url: expandedUrl,
+      userAgent: req.headers['user-agent'] || null,
+      timestamp: new Date().toISOString()
+    };
+
+    const clicksPath = path.join(process.cwd(), 'data', 'outbound-clicks.json');
+
+    let existing = [];
+
+    try {
+      const contents = await fs.readFile(clicksPath, 'utf8');
+      existing = JSON.parse(contents || '[]');
+    } catch (err) {
+      existing = [];
+    }
+
+    existing.push(record);
+
+    await fs.mkdir(path.join(process.cwd(), 'data'), { recursive: true });
+    await fs.writeFile(clicksPath, JSON.stringify(existing, null, 2), 'utf8');
+
+    return res.json({ ok: true, expandedUrl });
+
+  } catch (err) {
+    console.error('Error expanding provider template', err);
+    return res.status(500).json({ error: 'Could not expand provider URL' });
+  }
+});
+
 
 // ======================================================
 // DISTANCE CALCULATOR
@@ -737,9 +812,10 @@ const activity = suitableActivities
             : `I've found ${activity.name} as your adventure destination.`,
 
         activity: {
-          name:
-            activity.name,
-
+          name: activity.name,
+          lat: activity.lat,
+          lon: activity.lon,
+          tags: activity.tags,
           distanceMiles:
             Math.round(
               activity.distance * 10
@@ -749,9 +825,10 @@ const activity = suitableActivities
         food:
           food
             ? {
-                name:
-                  food.name,
-
+                name: food.name,
+                lat: food.lat,
+                lon: food.lon,
+                tags: food.tags,
                 distanceMiles:
                   Math.round(
                     food.distance * 10
