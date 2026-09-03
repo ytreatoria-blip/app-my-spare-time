@@ -1,4 +1,7 @@
 import express from "express";
+import fs from 'fs/promises';
+import path from 'path';
+import { randomUUID } from 'crypto';
 
 
 const app = express();
@@ -18,6 +21,62 @@ app.get("/api/health", (req, res) => {
     app: "App My Spare Time",
     stage: "Adventure Brain v1-clean"
   });
+});
+
+
+// ======================================================
+// PROVIDERS & OUTBOUND CLICK LOGGING
+// ======================================================
+
+app.get('/api/providers', async (req, res) => {
+  try {
+    const file = await fs.readFile(path.join(process.cwd(), 'data', 'providers.json'), 'utf8');
+    res.type('application/json').send(file);
+  } catch (err) {
+    console.error('Could not load providers.json', err);
+    // return an empty array as fallback
+    return res.json([]);
+  }
+});
+
+app.post('/api/outbound-click', async (req, res) => {
+  try {
+    const { providerId, provider, place, type, expandedUrl } = req.body || {};
+
+    const record = {
+      id: typeof randomUUID === 'function' ? randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2,8)}`,
+      providerId: providerId || (provider && provider.id) || provider,
+      providerName: (provider && provider.id) || providerId || provider,
+      place: place || null,
+      type: type || null,
+      url: expandedUrl || null,
+      userAgent: req.headers['user-agent'] || null,
+      timestamp: new Date().toISOString()
+    };
+
+    const clicksPath = path.join(process.cwd(), 'data', 'outbound-clicks.json');
+
+    let existing = [];
+
+    try {
+      const contents = await fs.readFile(clicksPath, 'utf8');
+      existing = JSON.parse(contents || '[]');
+    } catch (err) {
+      // file might not exist; we'll create it
+      existing = [];
+    }
+
+    existing.push(record);
+
+    await fs.mkdir(path.join(process.cwd(), 'data'), { recursive: true });
+    await fs.writeFile(clicksPath, JSON.stringify(existing, null, 2), 'utf8');
+
+    return res.json({ ok: true, id: record.id });
+
+  } catch (err) {
+    console.error('Error logging outbound click', err);
+    return res.status(500).json({ error: 'Could not log click' });
+  }
 });
 
 
