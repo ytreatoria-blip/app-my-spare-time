@@ -7,9 +7,13 @@
     "start": "node server.js"
   },
   "engines": {
-  "node": "18.x"
-},
+    "node": "18.x"
+  },
   "dependencies": {
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "helmet": "^7.0.0",
+    "cors": "^2.8.5",
+    "morgan": "^1.10.0",
+    "express-rate-limit": "^6.8.0"
   }
 }
