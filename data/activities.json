@@ -1,0 +1,212 @@
+{
+  "ui": {
+    "interest1": [
+      "Walking",
+      "Nature",
+      "History",
+      "Castles",
+      "Coast",
+      "Photography",
+      "Food",
+      "Adventure",
+      "Wildlife",
+      "Something unusual"
+    ],
+    "interest2": [
+      "Scenic views",
+      "Gardens",
+      "Museums",
+      "Markets",
+      "Wildlife",
+      "History",
+      "Photography",
+      "Something unusual",
+      "Surprise me"
+    ],
+    "food": [
+      "Anything",
+      "Pub / traditional",
+      "Cafe",
+      "Restaurant",
+      "Fine dining",
+      "Vegetarian friendly",
+      "Vegan friendly",
+      "Family friendly"
+    ],
+    "meal": [
+      "Whenever makes sense",
+      "Lunch",
+      "Dinner",
+      "Breakfast"
+    ],
+    "transport": [
+      "Car",
+      "Motorbike",
+      "Bicycle",
+      "Walking",
+      "Public transport"
+    ],
+    "distance": [
+      "10",
+      "20",
+      "30",
+      "50",
+      "100",
+      "any"
+    ],
+    "duration": [
+      "3h",
+      "half",
+      "day",
+      "overnight",
+      "weekend",
+      "3day"
+    ],
+    "stops": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5+",
+      "auto"
+    ],
+    "stopTime": [
+      "auto",
+      "30 minutes",
+      "1 hour",
+      "90 minutes",
+      "2 hours",
+      "3 hours"
+    ],
+    "stay": [
+      "Only if needed",
+      "Hotel",
+      "Pub with rooms",
+      "Cabin / lodge",
+      "Outdoor accommodation",
+      "Something unusual"
+    ],
+    "mystery": [
+      "no",
+      "yes"
+    ]
+  },
+  "interestKeywords": {
+    "walking": [
+      "park",
+      "nature_reserve",
+      "garden",
+      "viewpoint",
+      "beach",
+      "waterfall"
+    ],
+    "nature": [
+      "nature",
+      "nature_reserve",
+      "garden",
+      "park",
+      "beach",
+      "waterfall"
+    ],
+    "history": [
+      "historic",
+      "heritage",
+      "museum",
+      "memorial",
+      "castle",
+      "hall"
+    ],
+    "castles": [
+      "castle",
+      "fort",
+      "ruins"
+    ],
+    "coast": [
+      "beach",
+      "coast",
+      "seaside",
+      "cliff",
+      "waterfront"
+    ],
+    "photography": [
+      "viewpoint",
+      "gallery",
+      "attraction",
+      "garden",
+      "beach",
+      "waterfall"
+    ],
+    "food": [
+      "market"
+    ],
+    "adventure": [
+      "theme_park",
+      "waterfall",
+      "beach",
+      "attraction"
+    ],
+    "wildlife": [
+      "zoo",
+      "nature_reserve",
+      "wildlife",
+      "nature"
+    ],
+    "something unusual": [
+      "attraction",
+      "heritage",
+      "waterfall",
+      "theme_park",
+      "historic"
+    ],
+    "scenic views": [
+      "viewpoint",
+      "waterfall",
+      "beach",
+      "scenic",
+      "view"
+    ],
+    "gardens": [
+      "garden"
+    ],
+    "museums": [
+      "museum"
+    ],
+    "markets": [
+      "market"
+    ],
+    "surprise me": []
+  },
+  "overpass": {
+    "activityQueryTags": {
+      "tourism": [
+        "attraction",
+        "museum",
+        "gallery",
+        "viewpoint",
+        "zoo",
+        "theme_park",
+        "heritage"
+      ],
+      "historic": [
+        "*"
+      ],
+      "leisure": [
+        "park",
+        "nature_reserve",
+        "garden"
+      ],
+      "natural": [
+        "beach",
+        "waterfall"
+      ]
+    },
+    "foodQueryTags": {
+      "amenity": [
+        "restaurant",
+        "cafe",
+        "pub",
+        "fast_food"
+      ]
+    }
+  }
+}
