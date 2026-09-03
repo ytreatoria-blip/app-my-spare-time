@@ -235,22 +235,18 @@ app.post(
       // DISTANCE
       // --------------------------------------------------
 
-      const distanceChoice =
-        String(
-          preferences.distance || "20"
-        );
+      const distanceChoice = String(preferences.distance || "20");
 
-      const radiusMiles =
-        distanceChoice === "10" ? 10 :
-        distanceChoice === "20" ? 20 :
-        distanceChoice === "30" ? 30 :
-        distanceChoice === "50" ? 50 :
-        Infinity;
+const isAnywhereUK = distanceChoice === "any";
 
-      const radiusMetres =
-        radiusMiles === Infinity
-          ? 100000
-          : radiusMiles * 1609.34;
+const radiusMiles =
+  distanceChoice === "10" ? 10 :
+  distanceChoice === "20" ? 20 :
+  distanceChoice === "30" ? 30 :
+  distanceChoice === "50" ? 50 :
+  100;
+
+const radiusMetres = radiusMiles * 1609.34;
 
 
       // --------------------------------------------------
