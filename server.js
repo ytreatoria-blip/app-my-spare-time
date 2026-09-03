@@ -278,10 +278,12 @@ const radiusMiles =
   distanceChoice === "20" ? 20 :
   distanceChoice === "30" ? 30 :
   distanceChoice === "50" ? 50 :
-  100;
+  Infinity;
 
-const radiusMetres = radiusMiles * 1609.34;
-
+const radiusMetres =
+  isAnywhereUK
+    ? 50000
+    : radiusMiles * 1609.34;
 
       // --------------------------------------------------
       // ACTIVITY SEARCH
