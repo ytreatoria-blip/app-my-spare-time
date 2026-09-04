@@ -1,37 +1,82 @@
 [
   {
-    "id": "opentable",
-    "name": "OpenTable",
-    "types": ["restaurant"],
-    "template": "https://www.opentable.com/s?term={query}&rid={affiliate}",
-    "affiliateEnv": "OPENTABLE_AFFILIATE"
-  },
-  {
-    "id": "tripadvisor",
-    "name": "Tripadvisor",
-    "types": ["activity", "restaurant"],
-    "template": "https://www.tripadvisor.com/Search?q={query}&aid={affiliate}",
-    "affiliateEnv": "TRIPADVISOR_AFFILIATE"
-  },
-  {
-    "id": "google",
-    "name": "Google Search",
-    "types": ["activity", "restaurant", "accommodation"],
-    "template": "https://www.google.com/search?q={query}",
-    "affiliateEnv": ""
+    "id": "travelpayouts",
+    "name": "Travelpayouts",
+    "category": "flights",
+    "template": "https://www.travelpayouts.com/?marker=769134",
+    "affiliateEnv": null,
+    "description": "Flight and hotel booking"
   },
   {
     "id": "booking",
     "name": "Booking.com",
-    "types": ["accommodation"],
-    "template": "https://www.booking.com/searchresults.html?ss={query}&aid={affiliate}",
-    "affiliateEnv": "BOOKING_AID"
+    "category": "hotels",
+    "template": "https://www.booking.com/searchresults.html?ss={name}",
+    "affiliateEnv": "BOOKING_AFFILIATE_ID",
+    "description": "Hotels and accommodations"
+  },
+  {
+    "id": "airbnb",
+    "name": "Airbnb",
+    "category": "accommodation",
+    "template": "https://www.airbnb.com/s/{name}/homes",
+    "affiliateEnv": null,
+    "description": "Unique stays and experiences"
+  },
+  {
+    "id": "rentalcars",
+    "name": "Rentalcars.com",
+    "category": "cars",
+    "template": "https://www.rentalcars.com/SearchResults.do?&pickupLocation={name}&dropoffLocation={name}",
+    "affiliateEnv": "RENTALCARS_AFFILIATE_ID",
+    "description": "Car rentals"
   },
   {
     "id": "viator",
     "name": "Viator",
-    "types": ["activity"],
-    "template": "https://www.viator.com/searchResults/all?text={query}&affiliate={affiliate}",
-    "affiliateEnv": "VIATOR_AFFILIATE"
+    "category": "activities",
+    "template": "https://www.viator.com/tours/search?q={name}",
+    "affiliateEnv": null,
+    "description": "Tours and activities"
+  },
+  {
+    "id": "getyourguide",
+    "name": "GetYourGuide",
+    "category": "activities",
+    "template": "https://www.getyourguide.com/s/?q={name}",
+    "affiliateEnv": null,
+    "description": "Guided tours and attractions"
+  },
+  {
+    "id": "tripadvisor",
+    "name": "TripAdvisor",
+    "category": "restaurants",
+    "template": "https://www.tripadvisor.com/RestaurantSearch?q={name}",
+    "affiliateEnv": null,
+    "description": "Restaurants and reviews"
+  },
+  {
+    "id": "uber",
+    "name": "Uber",
+    "category": "transport",
+    "template": "https://www.uber.com/en-GB/u/search/?q={name}",
+    "affiliateEnv": "UBER_AFFILIATE_ID",
+    "description": "Rides and deliveries"
+  },
+  {
+    "id": "klook",
+    "name": "Klook",
+    "category": "activities",
+    "template": "https://www.klook.com/search?query={name}",
+    "affiliateEnv": null,
+    "description": "Attractions and tours in Asia"
+  },
+  {
+    "id": "musement",
+    "name": "Musement",
+    "category": "activities",
+    "template": "https://www.musement.com/search?q={name}",
+    "affiliateEnv": null,
+    "description": "Activities and experiences"
   }
 ]
