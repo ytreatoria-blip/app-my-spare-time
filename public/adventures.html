@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10251d">
+<title>My Adventures - App My Spare Time</title>
+
+<style>
+body{
+  font-family:system-ui,sans-serif;
+  margin:0;
+  background:#f6f3eb;
+  color:#10251d
+}
+main{
+  max-width:900px;
+  margin:auto;
+  padding:22px
+}
+h1{
+  margin-top:0
+}
+.filters{
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+  flex-wrap:wrap
+}
+.filter-btn{
+  padding:10px 16px;
+  border:2px solid #ddd;
+  background:#fff;
+  color:#10251d;
+  border-radius:20px;
+  cursor:pointer;
+  font-weight:600;
+  transition:all 0.2s
+}
+.filter-btn.active{
+  border-color:#10251d;
+  background:#10251d;
+  color:#fff
+}
+.adventures-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:20px;
+  margin-bottom:30px
+}
+.adventure-card{
+  background:#fff;
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 2px 8px #0001;
+  transition:transform 0.2s,box-shadow 0.2s
+}
+.adventure-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 8px 16px #0002
+}
+.adventure-header{
+  background:linear-gradient(135deg,#10251d 0%,#1a3a2e 100%);
+  color:#fff;
+  padding:20px
+}
+.adventure-header h3{
+  margin:0 0 8px 0;
+  font-size:1.2rem
+}
+.adventure-header .area{
+  font-size:0.9rem;
+  opacity:0.9
+}
+.adventure-body{
+  padding:20px
+}
+.adventure-detail{
+  display:flex;
+  justify-content:space-between;
+  padding:8px 0;
+  border-bottom:1px solid #eee;
+  font-size:0.9rem
+}
+.adventure-detail:last-child{
+  border-bottom:none
+}
+.adventure-detail .label{
+  font-weight:600;
+  color:#666
+}
+.adventure-detail .value{
+  color:#10251d;
+  font-weight:500
+}
+.adventure-date{
+  font-size:0.8rem;
+  color:#999;
+  margin-top:12px;
+  padding-top:12px;
+  border-top:1px solid #eee
+}
+.adventure-actions{
+  display:flex;
+  gap:8px;
+  margin-top:15px
+}
+.action-btn{
+  flex:1;
+  padding:10px;
+  border:1px solid #ddd;
+  background:#f6f3eb;
+  color:#10251d;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+  font-size:0.85rem;
+  transition:background 0.2s
+}
+.action-btn:hover{
+  background:#e8e4d8
+}
+.action-btn.primary{
+  background:#10251d;
+  color:#fff;
+  border-color:#10251d
+}
+.action-btn.primary:hover{
+  background:#1a3a2e
+}
+.empty-state{
+  text-align:center;
+  padding:60px 20px;
+  color:#999
+}
+.empty-state h2{
+  font-size:2rem;
+  margin-bottom:10px
+}
+.empty-state a{
+  display:inline-block;
+  margin-top:20px;
+  padding:12px 24px;
+  background:#10251d;
+  color:#fff;
+  text-decoration:none;
+  border-radius:8px;
+  font-weight:600
+}
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:15px;
+  margin-bottom:30px
+}
+.stat-card{
+  background:#fff;
+  border-radius:12px;
+  padding:20px;
+  text-align:center;
+  box-shadow:0 2px 8px #0001
+}
+.stat-number{
+  font-size:2rem;
+  font-weight:800;
+  color:#10251d;
+  margin-bottom:5px
+}
+.stat-label{
+  font-size:0.85rem;
+  color:#666;
+  text-transform:uppercase;
+  letter-spacing:0.05em
+}
+</style>
+</head>
+
+<body>
+
+<main>
+
+<h1>📚 My Adventures</h1>
+
+<p>View and manage your saved adventures.</p>
+
+<div class="stats-grid">
+<div class="stat-card">
+<div class="stat-number" id="totalAdventures">0</div>
+<div class="stat-label">Total Saved</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-number" id="thisMonth">0</div>
+<div class="stat-label">This Month</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-number" id="topActivity">—</div>
+<div class="stat-label">Top Activity</div>
+</div>
+</div>
+
+<div class="filters">
+<button class="filter-btn active" onclick="filterAdventures('all')">All</button>
+<button class="filter-btn" onclick="filterAdventures('week')">This Week</button>
+<button class="filter-btn" onclick="filterAdventures('month')">This Month</button>
+<button class="filter-btn" onclick="filterAdventures('3h')">3 hours</button>
+<button class="filter-btn" onclick="filterAdventures('half')">Half day</button>
+<button class="filter-btn" onclick="filterAdventures('day')">Full day</button>
+</div>
+
+<div class="adventures-grid" id="adventuresContainer"></div>
+
+</main>
+
+<script>
+
+let allAdventures = [];
+let filteredAdventures = [];
+
+function loadAdventures() {
+  allAdventures = JSON.parse(localStorage.getItem('savedAdventures') || '[]');
+  filteredAdventures = allAdventures;
+  renderAdventures();
+  updateStats();
+}
+
+function updateStats() {
+  document.getElementById('totalAdventures').textContent = allAdventures.length;
+  
+  const now = new Date();
+  const monthAgo = new Date(now.getFullYear(), now.getMonth(), 1);
+  const thisMonthCount = allAdventures.filter(a => new Date(a.savedAt) >= monthAgo).length;
+  document.getElementById('thisMonth').textContent = thisMonthCount;
+  
+  if (allAdventures.length > 0) {
+    const activities = {};
+    allAdventures.forEach(a => {
+      const activity = a.activity.name;
+      activities[activity] = (activities[activity] || 0) + 1;
+    });
+    const topActivity = Object.entries(activities).sort((a, b) => b[1] - a[1])[0][0];
+    document.getElementById('topActivity').textContent = topActivity.substring(0, 15);
+  }
+}
+
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-GB', { 
+    weekday: 'short',
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+
+function deleteAdventure(adventureId) {
+  if (!confirm('Delete this adventure?')) return;
+  
+  const saved = JSON.parse(localStorage.getItem('savedAdventures') || '[]');
+  const filtered = saved.filter(a => a.id !== adventureId);
+  localStorage.setItem('savedAdventures', JSON.stringify(filtered));
+  
+  loadAdventures();
+}
+
+function downloadAdventurePDF(adventure) {
+  let content = `ADVENTURE ITINERARY
+==================
+${adventure.title}
+
+Area: ${adventure.area}
+Duration: ${adventure.duration}
+Stops: ${adventure.stops}
+
+SUMMARY
+${adventure.summary}
+
+ACTIVITY
+Name: ${adventure.activity.name}
+Distance: ${adventure.activity.distanceMiles} miles
+Location: ${adventure.activity.lat}, ${adventure.activity.lon}
+
+${adventure.food ? `FOOD STOP
+Name: ${adventure.food.name}
+Distance: ${adventure.food.distanceMiles} miles
+Location: ${adventure.food.lat}, ${adventure.food.lon}` : ''}
+
+DIRECTIONS
+${adventure.mapsUrl}
+
+Saved: ${formatDate(adventure.savedAt)}
+  `;
+  
+  const blob = new Blob([content], { type: 'text/plain' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `adventure-${adventure.id}.txt`;
+  a.click();
+}
+
+function shareAdventure(adventure) {
+  const text = `🧭 Check out my adventure: ${adventure.area}! Activity: ${adventure.activity.name}${adventure.food ? ' → Food at ' + adventure.food.name : ''}. Duration: ${adventure.duration}. #AppMySpareTime`;
+  
+  if (navigator.share) {
+    navigator.share({
+      title: adventure.area,
+      text: text,
+      url: window.location.href
+    });
+  } else {
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
+  }
+}
+
+function filterAdventures(filter) {
+  // Update button styles
+  document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+  
+  const now = new Date();
+  
+  switch(filter) {
+    case 'week':
+      const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      filteredAdventures = allAdventures.filter(a => new Date(a.savedAt) >= weekAgo);
+      break;
+    case 'month':
+      const monthAgo = new Date(now.getFullYear(), now.getMonth(), 1);
+      filteredAdventures = allAdventures.filter(a => new Date(a.savedAt) >= monthAgo);
+      break;
+    case '3h':
+    case 'half':
+    case 'day':
+      filteredAdventures = allAdventures.filter(a => a.duration === filter);
+      break;
+    default:
+      filteredAdventures = allAdventures;
+  }
+  
+  renderAdventures();
+}
+
+function renderAdventures() {
+  const container = document.getElementById('adventuresContainer');
+  
+  if (filteredAdventures.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column:1/-1">
+        <div class="empty-state">
+          <h2>📭 No adventures yet</h2>
+          <p>Create your first adventure to see it here!</p>
+          <a href="/">Build an Adventure</a>
+        </div>
+      </div>
+    `;
+    return;
+  }
+  
+  container.innerHTML = filteredAdventures
+    .sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt))
+    .map(adventure => `
+      <div class="adventure-card">
+        <div class="adventure-header">
+          <h3>${adventure.area}</h3>
+          <div class="area">${adventure.activity.name}</div>
+        </div>
+        
+        <div class="adventure-body">
+          <div class="adventure-detail">
+            <span class="label">📊 Type</span>
+            <span class="value">${adventure.duration}</span>
+          </div>
+          
+          <div class="adventure-detail">
+            <span class="label">🛑 Stops</span>
+            <span class="value">${adventure.stops}</span>
+          </div>
+          
+          <div class="adventure-detail">
+            <span class="label">📍 Activity</span>
+            <span class="value">${adventure.activity.distanceMiles}mi away</span>
+          </div>
+          
+          ${adventure.food ? `
+          <div class="adventure-detail">
+            <span class="label">🍴 Food</span>
+            <span class="value">${adventure.food.distanceMiles}mi away</span>
+          </div>
+          ` : ''}
+          
+          <div class="adventure-date">
+            Saved ${formatDate(adventure.savedAt)}
+          </div>
+          
+          <div class="adventure-actions">
+            <a href="${adventure.mapsUrl}" target="_blank" class="action-btn primary" title="Open in Maps">🗺️ Maps</a>
+            <button class="action-btn" onclick="downloadAdventurePDF(${JSON.stringify(adventure).replace(/"/g, '&quot;')})">📥 PDF</button>
+            <button class="action-btn" onclick="shareAdventure(${JSON.stringify(adventure).replace(/"/g, '&quot;')})">📤 Share</button>
+            <button class="action-btn" onclick="deleteAdventure('${adventure.id}')">🗑️ Delete</button>
+          </div>
+        </div>
+      </div>
+    `)
+    .join('');
+}
+
+// Load on page load
+loadAdventures();
+
+</script>
+
+</body>
+</html>
