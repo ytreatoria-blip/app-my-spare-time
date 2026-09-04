@@ -156,6 +156,48 @@ app.post('/api/expand-and-log', async (req, res) => {
 
 
 // ======================================================
+// ANALYTICS DASHBOARD
+// ======================================================
+
+app.get('/api/analytics/clicks', async (req, res) => {
+  try {
+    const clicksPath = path.join(process.cwd(), 'data', 'outbound-clicks.json');
+    const contents = await fs.readFile(clicksPath, 'utf8');
+    const clicks = JSON.parse(contents || '[]');
+
+    // Aggregate stats
+    const stats = {
+      totalClicks: clicks.length,
+      clicksByProvider: {},
+      clicksByType: {},
+      recentClicks: clicks.slice(-20).reverse()
+    };
+
+    clicks.forEach(click => {
+      stats.clicksByProvider[click.providerName] = (stats.clicksByProvider[click.providerName] || 0) + 1;
+      if (click.type) {
+        stats.clicksByType[click.type] = (stats.clicksByType[click.type] || 0) + 1;
+      }
+    });
+
+    res.json(stats);
+  } catch (err) {
+    console.error('Error reading analytics', err);
+    return res.json({
+      totalClicks: 0,
+      clicksByProvider: {},
+      clicksByType: {},
+      recentClicks: []
+    });
+  }
+});
+
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'public', 'dashboard.html'));
+});
+
+
+// ======================================================
 // DISTANCE CALCULATOR
 // ======================================================
 
