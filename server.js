@@ -305,7 +305,47 @@ async function findPlaces(query) {
     "All Overpass searches failed:",
     failures
   );
+// --------------------------------------------------
+// FALLBACK: NOMINATIM SEARCH
+// --------------------------------------------------
 
+try {
+  console.log("FALLBACK: Trying Nominatim…");
+
+  const nominatimUrl =
+    `https://nominatim.openstreetmap.org/search?` +
+    new URLSearchParams({
+      q: "tourist attraction",
+      format: "json",
+      limit: 20,
+      addressdetails: 1,
+      extratags: 1,
+      namedetails: 1
+    });
+
+  const response = await fetch(nominatimUrl, {
+    headers: {
+      "User-Agent": "AppMySpareTime/1.0"
+    }
+  });
+
+  const data = await response.json();
+
+  const places = data.map(item => ({
+    name: item.display_name,
+    lat: Number(item.lat),
+    lon: Number(item.lon),
+    tags: item.extratags || {}
+  }));
+
+  if (places.length > 0) {
+    console.log("FALLBACK SUCCESS: Nominatim returned results.");
+    return places;
+  }
+
+} catch (fallbackError) {
+  failures.push("Nominatim fallback failed: " + fallbackError.message);
+}
   throw new Error(
     `Place search failed. ${failures.join(" | ")}`
   );
