@@ -41,6 +41,27 @@ select,input{
   font:inherit;
   background:#fff
 }
+.checkbox-group{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:10px
+}
+.checkbox-item{
+  display:flex;
+  align-items:center
+}
+.checkbox-item input[type="checkbox"]{
+  width:auto;
+  margin-right:8px;
+  cursor:pointer
+}
+.checkbox-item label{
+  margin:0;
+  font-weight:400;
+  cursor:pointer;
+  flex:1
+}
 .primary{
   width:100%;
   padding:17px;
@@ -63,6 +84,20 @@ select,input{
   border:1px solid #ddd;
   border-radius:14px;
   padding:15px
+}
+.result a{
+  display:inline-block;
+  margin-top:10px;
+  padding:12px 16px;
+  background:#10251d;
+  color:#fff;
+  text-decoration:none;
+  border-radius:8px;
+  font-weight:600;
+  transition:background 0.2s
+}
+.result a:hover{
+  background:#1a3a2e
 }
 </style>
 </head>
@@ -137,34 +172,50 @@ Location not requested yet.
 
 <h2>🎯 What sounds good?</h2>
 
-<label>Main interest</label>
+<label>What interests you? (pick all that apply)</label>
 
-<select id="interest1">
-<option>Walking</option>
-<option>Nature</option>
-<option>History</option>
-<option>Castles</option>
-<option>Coast</option>
-<option>Photography</option>
-<option>Food</option>
-<option>Adventure</option>
-<option>Wildlife</option>
-<option>Something unusual</option>
-</select>
-
-<label>Something extra</label>
-
-<select id="interest2">
-<option>Scenic views</option>
-<option>Gardens</option>
-<option>Museums</option>
-<option>Markets</option>
-<option>Wildlife</option>
-<option>History</option>
-<option>Photography</option>
-<option>Something unusual</option>
-<option>Surprise me</option>
-</select>
+<div class="checkbox-group">
+<div class="checkbox-item">
+<input type="checkbox" id="interest-walking" value="Walking">
+<label for="interest-walking">Walking</label>
+</div>
+<div class="checkbox-item">
+<input type="checkbox" id="interest-nature" value="Nature">
+<label for="interest-nature">Nature</label>
+</div>
+<div class="checkbox-item">
+<input type="checkbox" id="interest-history" value="History">
+<label for="interest-history">History</label>
+</div>
+<div class="checkbox-item">
+<input type="checkbox" id="interest-castles" value="Castles">
+<label for="interest-castles">Castles</label>
+</div>
+<div class="checkbox-item">
+<input type="checkbox" id="interest-coast" value="Coast">
+<label for="interest-coast">Coast</label>
+</div>
+<div class="checkbox-item">
+<input type="checkbox" id="interest-photography" value="Photography">
+<label for="interest-photography">Photography</label>
+</div>
+<div class="checkbox-item">
+<input type="checkbox" id="interest-food" value="Food">
+<label for="interest-food">Food</label>
+</div>
+<div class="checkbox-item">
+<input type="checkbox" id="interest-adventure" value="Adventure">
+<label for="interest-adventure">Adventure</label>
+</div>
+<div class="checkbox-item">
+<input type="checkbox" id="interest-wildlife" value="Wildlife">
+<label for="interest-wildlife">Wildlife</label>
+</div>
+<div class="checkbox-item">
+<input type="checkbox" id="interest-unusual" value="Something unusual">
+<label for="interest-unusual">Something unusual</label>
+</div>
+</div>
 
 </section>
 
@@ -288,14 +339,15 @@ const resultEl = document.getElementById('result');
 const duration = document.getElementById('duration');
 const distance = document.getElementById('distance');
 const transport = document.getElementById('transport');
-const interest1 = document.getElementById('interest1');
-const interest2 = document.getElementById('interest2');
 const food = document.getElementById('food');
 const meal = document.getElementById('meal');
 const stops = document.getElementById('stops');
 const stopTime = document.getElementById('stopTime');
 const stay = document.getElementById('stay');
 const mystery = document.getElementById('mystery');
+
+// Get all interest checkboxes
+const interestCheckboxes = document.querySelectorAll('input[id^="interest-"]');
 
 // Disable the build button until we have a location
 goButton.disabled = true;
@@ -358,6 +410,11 @@ goButton.onclick = async () => {
 
   try {
 
+    // Collect all checked interests
+    const selectedInterests = Array.from(interestCheckboxes)
+      .filter(checkbox => checkbox.checked)
+      .map(checkbox => checkbox.value);
+
     const response = await fetch(
       "/api/adventure/build",
       {
@@ -377,10 +434,7 @@ goButton.onclick = async () => {
 
             transport:transport.value,
 
-            interests:[
-              interest1.value,
-              interest2.value
-            ],
+            interests:selectedInterests,
 
             food:food.value,
 
@@ -441,6 +495,15 @@ goButton.onclick = async () => {
       🗺️ Open adventure in Google Maps
     </a>
 
+    <a
+      href="${data.travelpayoutsUrl}"
+      target="_blank"
+      rel="noopener"
+      onclick="logTravelpayoutsClick()"
+    >
+      ✈️ Book flights & hotels
+    </a>
+
   </div>
 `;
 
@@ -472,6 +535,22 @@ goButton.onclick = async () => {
   }
 
 };
+
+// Log Travelpayouts click
+function logTravelpayoutsClick() {
+  fetch('/api/outbound-click', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      providerId: 'travelpayouts',
+      provider: { id: 'travelpayouts', name: 'Travelpayouts' },
+      type: 'flight-booking',
+      expandedUrl: 'https://www.travelpayouts.com/?marker=769134'
+    })
+  }).catch(err => console.error('Error logging Travelpayouts click:', err));
+}
 
 </script>
 
