@@ -1,0 +1,4 @@
+.env
+node_modules/
+data/outbound-clicks.json
+.DS_Store
