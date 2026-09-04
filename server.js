@@ -842,7 +842,11 @@ const activity = suitableActivities
         stops:
           stops.length,
 
-        mapsUrl
+        mapsUrl,
+
+        travelpayoutsUrl:
+          "https://www.travelpayouts.com/?marker=769134"
+
       });
 
     } catch (error) {
